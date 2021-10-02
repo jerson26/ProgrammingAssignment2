@@ -1,15 +1,34 @@
-## Put comments here that give an overall description of what your
-## functions do
+## These functions help in faster computation of matrices using cache
 
-## Write a short comment describing this function
+## this is the function for the first part, makecachematrix
 
 makeCacheMatrix <- function(x = matrix()) {
+    invers <- NULL
 
+    pinvers <- function(solvmat) invers <<- solvmat
+    cinvers <- function() invers
+    
+        
+    cache <- function() x
+    p <- function(y){
+        x <<- y
+        invers <<- NULL
+    }
+    
+    list(p = p, cache = cache, pinvers = pinvers, cinvers = cinvers)
 }
 
-
-## Write a short comment describing this function
+## this is a function for the second part cacheSolve
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    invers <- x$cinvers()
+    if(!is.null(invers)){
+        message("the data is now being cached")
+        return(invers)
+    }
+    
+    final <- x$cache()
+    invers <- solve(final)
+    x$pinvers(invers)
+    invers
 }
